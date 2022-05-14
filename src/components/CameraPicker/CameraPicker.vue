@@ -1,6 +1,5 @@
 <template>
   <div :class="$style.parent">
-    <button @click="onSave">Save</button>
     <div :class="$style.videoContainer">
       <div :class="$style.svgParent" @click="onClick">
         <svg>
@@ -41,7 +40,7 @@
     </div>
     <div :class="$style.listParent">
       <div :class="$style.list">
-        <h2>Список</h2>
+        <h3 style="margin-top: 20px">Список точек</h3>
         <table>
           <tbody>
             <tr v-for="(obj, index) of areasNames" align="center">
@@ -65,6 +64,9 @@
           </thead>
         </table>
       </div>
+    </div>
+    <div :class="$style.buttonContainer">
+      <v-btn @click="onSave">Сохранить</v-btn>
     </div>
   </div>
 </template>

@@ -1,5 +1,9 @@
 import { Component, Vue } from "vue-property-decorator";
-import saveArea, { getAreas, getCamera } from "@/services/pointsManager";
+import saveArea, {
+  getAreas,
+  getCamera,
+  updateArea,
+} from "@/services/pointsManager";
 
 /**
  *    Attention!
@@ -13,8 +17,9 @@ export default class CameraPicker extends Vue {
   allPoints: any = [];
   validatedArea = [false];
   currentArea = 0;
+  ids: any = [];
   img = "http://158.58.130.148/mjpg/video.mjpg";
-  cameraUuid = "df23eb7d-de12-4d75-b547-2310015c29cb";
+  cameraUuid = "3a586aaa-bb2f-4511-8015-9b4566b3083a";
 
   constructor() {
     super();
@@ -34,11 +39,13 @@ export default class CameraPicker extends Vue {
 
     this.validatedArea = [];
     this.areas = [];
+    this.ids = [];
     this.currentArea = -1;
     this.allPoints = [];
     getCamera(this.cameraUuid).then(
       ((e: any) => {
         for (const i of e[0].areas) {
+          this.ids.push(i.uuid);
           this.areas.push(
             i.points.map((y: any) => {
               return `${y.x},${y.y}`;
@@ -89,7 +96,7 @@ export default class CameraPicker extends Vue {
   }
 
   onClick(e: MouseEvent) {
-    if (this.currentArea === -1) this.currentArea = this.areas.length - 18;
+    if (this.currentArea === -1) this.currentArea = this.areas.length - 1;
 
     const svgParentCoordinates = (<HTMLDivElement>(
       this.$refs.svgParent
@@ -117,6 +124,7 @@ export default class CameraPicker extends Vue {
       this.currentArea = this.areas.length - 1;
       this.allPoints = [];
       this.areasNames.push("Hello world");
+      this.ids.push(undefined);
     } else {
       this.addPoint(point.x, point.y);
       this.validatedArea[this.currentArea] = false;
@@ -142,12 +150,14 @@ export default class CameraPicker extends Vue {
       const obj: any = {
         name: this.areasNames[i],
         camera_uuid: this.cameraUuid,
+        uuid: this.ids[i],
         points: this.areas[i].map((e: any) => {
           const object = e.split(",");
           return { x: object[0], y: object[1] };
         }),
       };
-      saveArea(obj);
+      if (obj.uuid) updateArea(obj.uuid, obj);
+      else saveArea(obj);
     }
   }
 }
