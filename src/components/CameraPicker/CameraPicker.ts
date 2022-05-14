@@ -18,8 +18,50 @@ export default class CameraPicker extends Vue {
   validatedArea = [false];
   currentArea = 0;
   ids: any = [];
-  img = "http://158.58.130.148/mjpg/video.mjpg";
-  cameraUuid = "3a586aaa-bb2f-4511-8015-9b4566b3083a";
+  img = "http://localhost:6969/oneshotimage1";
+  cameraUuid = "6c317b0f-ed20-4fcc-aadf-629892e84f2b";
+
+  public mounted() {
+    const imgContainer = <HTMLImageElement>this.$refs.svgParent;
+    let inited = false;
+    imgContainer.onload = () => {
+      const koeff = imgContainer.naturalWidth / imgContainer.width;
+
+      if (!inited) {
+        inited = true;
+        this.validatedArea = [];
+        this.areas = [];
+        this.ids = [];
+        this.currentArea = -1;
+        this.allPoints = [];
+        getCamera(this.cameraUuid).then(
+          ((e: any) => {
+            console.log(e);
+            for (const i of e[0].areas) {
+              this.ids.push(i.uuid);
+              this.areas.push(
+                i.points.map((y: any) => {
+                  return `${y.x / koeff},${y.y / koeff}`;
+                })
+              );
+              this.validatedArea.push(true);
+              this.areasNames.push(i.name);
+            }
+            this.areas.push([]);
+            this.currentArea = this.areas.length;
+            this.allPoints = [];
+            console.log(this.areas);
+          }).bind(this)
+        );
+      }
+
+      setTimeout(() => {
+        imgContainer.src =
+          "http://localhost:6969/oneshotimage1?" +
+          Math.ceil(Math.random() * 999999999);
+      }, 1000);
+    };
+  }
 
   constructor() {
     super();
@@ -27,38 +69,6 @@ export default class CameraPicker extends Vue {
     document.oncontextmenu = () => {
       return false;
     };
-
-    const img = <HTMLImageElement>this.$refs.svgParent;
-
-    // img.onload=()=>{
-    //   setInterval(() => {
-    //     img.src =
-    //       "http://localhost:6969/oneshotimage1?" + Math.random() * 999999999;
-    //   }, 800);
-    // }
-
-    this.validatedArea = [];
-    this.areas = [];
-    this.ids = [];
-    this.currentArea = -1;
-    this.allPoints = [];
-    getCamera(this.cameraUuid).then(
-      ((e: any) => {
-        for (const i of e[0].areas) {
-          this.ids.push(i.uuid);
-          this.areas.push(
-            i.points.map((y: any) => {
-              return `${y.x},${y.y}`;
-            })
-          );
-          this.validatedArea.push(true);
-          this.areasNames.push(i.name);
-        }
-        this.areas.push([]);
-        this.currentArea = this.areas.length;
-        this.allPoints = [];
-      }).bind(this)
-    );
   }
 
   getCoords(index: number) {
@@ -97,6 +107,9 @@ export default class CameraPicker extends Vue {
 
   onClick(e: MouseEvent) {
     if (this.currentArea === -1) this.currentArea = this.areas.length - 1;
+    if (!this.areas[this.currentArea]) {
+      this.currentArea = this.areas.length - 1;
+    }
 
     const svgParentCoordinates = (<HTMLDivElement>(
       this.$refs.svgParent
@@ -146,18 +159,29 @@ export default class CameraPicker extends Vue {
   }
 
   onSave() {
+    const imgContainer = <HTMLImageElement>this.$refs.svgParent;
+    const koeff = imgContainer.naturalWidth / imgContainer.width;
+    const koeff2 = imgContainer.naturalWidth / imgContainer.width;
+    console.log(koeff, koeff2);
+
     for (const i in this.areas) {
+      console.log(i);
       const obj: any = {
         name: this.areasNames[i],
         camera_uuid: this.cameraUuid,
         uuid: this.ids[i],
         points: this.areas[i].map((e: any) => {
           const object = e.split(",");
-          return { x: object[0], y: object[1] };
+          return { x: object[0] * koeff, y: object[1] * koeff };
         }),
       };
-      if (obj.uuid) updateArea(obj.uuid, obj);
-      else saveArea(obj);
+
+      if (obj.uuid) {
+        updateArea(obj.uuid, obj);
+      } else {
+        console.log(this.areas, this.areasNames);
+        saveArea(obj);
+      }
     }
   }
 }
