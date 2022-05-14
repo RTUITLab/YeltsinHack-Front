@@ -2,14 +2,14 @@
   <div>
     <v-container>
       <v-row>
-        <v-col class="pt-5">
+        <v-col>
           <div style="color: rgba(0, 0, 0, 1)">
             Статистика
           </div>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col>
+      <v-row class="mt-0">
+        <v-col class="py-0">
           <v-carousel v-model="carousel" show-arrows-on-hover hide-delimiters >
             <v-carousel-item
             v-for="(elem, i) in carouselLength"
@@ -29,20 +29,16 @@
                   v-for="(elem, el) in carouselItems"
                   :key="el"
                   >
-                      <!-- <v-avatar
-                      tile
-                      size="240"
-                      > -->
-                      <v-sheet
-                      tile>
-                        <v-img
-                        src="../../assets/camera.png">
-                          <div class="white--text text-h5" style="position: absolute; bottom: 5px; background-color: rgba(196, 196, 196, 0.8); width: 100%">
-                            Camera {{el}}
-                          </div>
-                        </v-img>
-                      </v-sheet>
-                      <!-- </v-avatar> -->
+                    <v-sheet
+                    @click="goToCamera('123')"
+                    tile>
+                      <v-img
+                      src="../../assets/camera.png">
+                        <div class="white--text text-h5" style="position: absolute; bottom: 5px; background-color: rgba(196, 196, 196, 0.8); width: 100%">
+                          Camera {{el}}
+                        </div>
+                      </v-img>
+                    </v-sheet>
                   </v-col>
                 </v-row>
               </v-sheet>
@@ -63,6 +59,10 @@ export default Vue.extend({
 
   components: {},
   methods: {
+    goToCamera(id: string){
+      const cameraId = id
+      this.$router.push({ name: "zone-page", params: { cameraId: cameraId } });
+    }
   },
   data() {
     return {
@@ -71,16 +71,16 @@ export default Vue.extend({
     }
   },
   computed: {
-      carouselLength(){
-        const length = Math.ceil(this.items.length/6)
-        return length
-      },
-      carouselItems(){
-        const num = this.carousel
-        const items = this.items as string[]
-        const arr = items.slice(num*6, num*6+6)
-        return arr
-      },
-  }
+    carouselLength(){
+      const length = Math.ceil(this.items.length/6)
+      return length
+    },
+    carouselItems(){
+      const num = this.carousel
+      const items = this.items as string[]
+      const arr = items.slice(num*6, num*6+6)
+      return arr
+    },
+  },
 });
 </script>
