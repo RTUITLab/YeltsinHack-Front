@@ -10,38 +10,42 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-carousel v-model="carousel" show-arrows-on-hover >
+          <v-carousel v-model="carousel" show-arrows-on-hover hide-delimiters >
             <v-carousel-item
             v-for="(elem, i) in carouselLength"
             :key="i">
-              <!-- <v-sheet
+              <v-sheet
               height="100%"
-              tile> -->
+              tile>
                 <v-row
                 align="center"
-                class="fill-height">
+                dense
+                class="my-6">
                   <v-col 
                   cols="4"
-                  class="py-0"
+                  class="py-1"
                   align="center"
                   justify="center"
                   v-for="(elem, el) in carouselItems"
                   :key="el"
                   >
-                    <!-- <div
-                  class="d-flex"> -->
                       <!-- <v-avatar
                       tile
                       size="240"
                       > -->
+                      <v-sheet
+                      tile>
                         <v-img
-                        src="../../assets/camera.png"
-                        ></v-img>
+                        src="../../assets/camera.png">
+                          <div class="white--text text-h5" style="position: absolute; bottom: 5px; background-color: rgba(196, 196, 196, 0.8); width: 100%">
+                            Camera {{el}}
+                          </div>
+                        </v-img>
+                      </v-sheet>
                       <!-- </v-avatar> -->
-                    <!-- </div>                     -->
                   </v-col>
                 </v-row>
-              <!-- </v-sheet> -->
+              </v-sheet>
             </v-carousel-item>
           </v-carousel>
         </v-col>
@@ -63,7 +67,7 @@ export default Vue.extend({
   data() {
     return {
       carousel: 0,
-      items: ['item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7', 'item8', 'item9', 'item10'],
+      items: ['item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7', 'item8', 'item9'],
     }
   },
   computed: {
