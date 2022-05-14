@@ -5,14 +5,15 @@
         <svg>
           <polyline
             :points="points.join(' ')"
-            fill="transparent"
+            :fill="validatedArea ? 'rgba(0,255,0,0.3)' : 'transparent'"
             stroke-width="2"
-            stroke="rgb(0,255,0)"
+            :stroke="validatedArea ? 'rgb(0,255,0)' : 'rgb(255,0,0)'"
           />
           <circle
-            cx="102"
-            cy="102"
-            r="5"
+            v-for="point of points"
+            :cx="point.split(',')[0]"
+            :cy="point.split(',')[1]"
+            r="4"
             fill="rgb(0,255,0)"
             stroke-width="1"
             stroke="rgb(0,0,0)"
@@ -20,6 +21,7 @@
         </svg>
       </div>
       <img
+        ref="svgParent"
         :class="$style.videoContent"
         src="http://158.58.130.148/mjpg/video.mjpg"
       />
