@@ -10,6 +10,7 @@
       :close-on-content-click="false"
       :nudge-width="200"
       offset-y
+      flat
     >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -22,11 +23,11 @@
         </template>
 
         <v-card
-        elevetion="0"
-        class="mt-2"
+        flat
+        class="mx-auto"
         max-width="300"
         tile>
-            <v-list>
+            <v-list elevation="0">
             <v-list-item-group
             v-model="selectedItem"
             color="primary"
@@ -35,11 +36,8 @@
                 v-for="(item, i) in items"
                 :key="i"
                 >
-                <v-list-item-icon>
-                    <v-icon v-text="item.icon"></v-icon>
-                </v-list-item-icon>
                 <v-list-item-content>
-                    <v-list-item-title v-text="item.text"></v-list-item-title>
+                    <v-list-item-title v-text="item" ></v-list-item-title>
                 </v-list-item-content>
                 </v-list-item>
             </v-list-item-group>
@@ -74,7 +72,7 @@ export default Vue.extend({
   data() {
     return {
       selectedItem: 1,
-      items: ["Статистика", ],
+      items: ["Статистика", "Области"],
       fav: true,
       menu: false,
       message: false,
