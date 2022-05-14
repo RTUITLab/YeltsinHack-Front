@@ -1,6 +1,10 @@
 <template>
   <div>
-    <h1>fds</h1>
+    <img
+      src="http://158.58.130.148/mjpg/video.mjpg"
+      height="250px"
+      width="250px"
+    ></img>
   </div>
 </template>
 
