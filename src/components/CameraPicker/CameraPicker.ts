@@ -7,11 +7,22 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class CameraPicker extends Vue {
-  points: any = [];
-  validatedArea = false;
+  areas: any = [[]];
+  allPoints: any = [];
+  validatedArea = [false];
+  currentArea = 0;
+
+  constructor() {
+    super();
+
+    document.oncontextmenu = () => {
+      return false;
+    };
+  }
 
   addPoint(x: number, y: number) {
-    this.points.push(`${x},${y}`);
+    this.areas[this.currentArea].push(`${x},${y}`);
+    this.allPoints.push(`${x},${y}`);
   }
 
   onClick(e: MouseEvent) {
@@ -24,21 +35,39 @@ export default class CameraPicker extends Vue {
       y: e.y - svgParentCoordinates.y,
     };
 
-    const findPoint = this.points.find((e: any) => {
+    const findPoint = this.areas[this.currentArea].find((e: any) => {
       const obj = e.split(",");
       return (
         Math.sqrt(
           Math.pow(obj[0] - point.x, 2) + Math.pow(obj[1] - point.y, 2)
-        ) < 4
+        ) < 6
       );
     });
 
     if (findPoint) {
       this.addPoint(findPoint.split(",")[0], findPoint.split(",")[1]);
-      this.validatedArea = true;
+      this.areas.push([]);
+      this.validatedArea.push(false);
+      this.validatedArea[this.currentArea] = true;
+      this.currentArea = this.areas.length - 1;
+      this.allPoints = [];
     } else {
       this.addPoint(point.x, point.y);
-      this.validatedArea = false;
+      this.validatedArea[this.currentArea] = false;
     }
+  }
+
+  onCircleClick(e: any) {
+    const index: any = e.target.getAttribute("index");
+    this.areas[this.currentArea].splice(index, 1);
+    this.allPoints = this.areas[this.currentArea];
+  }
+
+  onAreaClick(e: any) {
+    const index: any = e.target.getAttribute("index");
+    e.preventDefault();
+    e.stopPropagation();
+    this.allPoints = this.areas[index];
+    this.currentArea = index;
   }
 }

@@ -4,19 +4,24 @@
       <div :class="$style.svgParent" @click="onClick">
         <svg>
           <polyline
-            :points="points.join(' ')"
-            :fill="validatedArea ? 'rgba(0,255,0,0.3)' : 'transparent'"
+            v-for="(obj, index) of areas"
+            @click="onAreaClick"
+            :index="index"
+            :fill="validatedArea[index] ? 'rgba(0,255,0,0.3)' : 'transparent'"
+            :points="obj.join(' ')"
+            :stroke="validatedArea[index] ? 'rgb(0,255,0)' : 'rgb(255,0,0)'"
             stroke-width="2"
-            :stroke="validatedArea ? 'rgb(0,255,0)' : 'rgb(255,0,0)'"
           />
           <circle
-            v-for="point of points"
+            @click.right="onCircleClick"
+            v-for="(point, index) of allPoints"
+            :index="index"
             :cx="point.split(',')[0]"
             :cy="point.split(',')[1]"
-            r="4"
             fill="rgb(0,255,0)"
-            stroke-width="1"
+            r="4"
             stroke="rgb(0,0,0)"
+            stroke-width="1"
           />
         </svg>
       </div>
@@ -30,5 +35,4 @@
 </template>
 
 <script lang="ts" src="./CameraPicker.ts"></script>
-
 <style lang="scss" module src="./CameraPicker.scss"></style>
