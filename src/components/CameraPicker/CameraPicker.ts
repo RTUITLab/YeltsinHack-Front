@@ -11,6 +11,7 @@ export default class CameraPicker extends Vue {
   allPoints: any = [];
   validatedArea = [false];
   currentArea = 0;
+  img = "http://localhost:6969/oneshotimage1?1";
 
   constructor() {
     super();
@@ -18,6 +19,12 @@ export default class CameraPicker extends Vue {
     document.oncontextmenu = () => {
       return false;
     };
+
+    setInterval(() => {
+      const img = <HTMLImageElement>this.$refs.svgParent;
+      img.src =
+        "http://localhost:6969/oneshotimage1?" + Math.random() * 999999999;
+    }, 800);
   }
 
   addPoint(x: number, y: number) {
