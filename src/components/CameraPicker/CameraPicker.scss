@@ -24,4 +24,30 @@
       height: fit-content;
     }
   }
+
+  .listParent {
+    max-width: 700px;
+    margin: 0 auto;
+    .list {
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  table{
+    margin-top: 50px;
+    width: 100%;
+    td,th{
+      text-align: center;
+    }
+
+  }
+  .buttonContainer{
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    margin-top:25px;
+    text-align: right;
+    margin-bottom: 25px;
+  }
 }
