@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import Statistics from "../views/Statistics/Statistics.vue";
+import ZonePage from "../views/Statistics/ZonePage.vue";
 import EditingAreas from "../views/EditingAreas/EditingAreas.vue";
 import VisitMap from "../views/VisitMap/VisitMap.vue";
 
@@ -17,6 +18,11 @@ const routes: Array<RouteConfig> = [
     path: "/",
     name: "statisticts",
     component: Statistics,
+  },
+  {
+    path: "/:cameraId",
+    name: "zone-page",
+    component: ZonePage,
   },
   {
     path: "/editing-areas",

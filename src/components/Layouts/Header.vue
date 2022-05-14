@@ -3,60 +3,35 @@
     <v-app-bar
     color="#1976D2"
     dark
+    height="48px"
     flat
     >
-    <v-menu
-      v-model="menu"
-      :close-on-content-click="false"
-      :nudge-width="200"
-      offset-y
-    >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            icon
-            v-bind="attrs"
-            v-on="on"
-          >
-            <v-icon>mdi-menu</v-icon>
-          </v-btn>
-        </template>
-
-        <v-card
-        elevetion="0"
-        class="mt-2"
-        max-width="300"
-        tile>
-            <v-list>
-            <v-list-item-group
-            v-model="selectedItem"
-            color="primary"
-            >
-                <v-list-item
-                v-for="(item, i) in items"
-                :key="i"
-                >
-                <v-list-item-icon>
-                    <v-icon v-text="item.icon"></v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title v-text="item.text"></v-list-item-title>
-                </v-list-item-content>
-                </v-list-item>
-            </v-list-item-group>
-            </v-list>
-        </v-card>
-      </v-menu>
-
-      <v-toolbar-title>Ельцин центр</v-toolbar-title>
+      <v-toolbar-title class="mr-4">Ельцин центр</v-toolbar-title>
+      <v-divider
+      style="color: rgba(255, 255, 255, 0.25)"
+      inset
+      vertical
+      ></v-divider>
 
       <v-spacer></v-spacer>
 
-      <div>
-        Account Name
+      <div class="text-subtitle-2 font-weight-regular">
+        Admin Dashboard
       </div>
 
-      <v-btn icon>
-        <v-icon size="36">mdi-account-circle-outline</v-icon>
+      <v-spacer></v-spacer>
+
+      <v-divider
+      style="color: rgba(255, 255, 255, 0.25)"
+      inset
+      vertical
+      ></v-divider>
+      <v-btn
+      elevation="0"
+      class="text-capitalize font-weight-regular ml-4"
+      color="primary">
+        Admin Name
+        <v-icon class="ml-3" size="36">mdi-account-circle-outline</v-icon>
       </v-btn>
     </v-app-bar>
   </div>
@@ -74,7 +49,7 @@ export default Vue.extend({
   data() {
     return {
       selectedItem: 1,
-      items: ["Статистика", ],
+      items: ["Статистика", "Области"],
       fav: true,
       menu: false,
       message: false,
