@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import Statistics from "../views/Statistics/Statistics.vue";
+import CamerasRouter from "../views/Statistics/CamerasRouter.vue";
 import ZonePage from "../views/Statistics/ZonePage.vue";
 import EditingAreas from "../views/EditingAreas/EditingAreas.vue";
 import VisitMap from "../views/VisitMap/VisitMap.vue";
@@ -22,17 +23,16 @@ const routes: Array<RouteConfig> = [
   {
     path: "/:cameraId",
     name: "zone-page",
-    component: ZonePage,
-  },
-  {
-    path: "/editing-areas",
-    name: "editing-areas",
-    component: EditingAreas,
-  },
-  {
-    path: "/visit-map",
-    name: "visit-map",
-    component: VisitMap,
+    component: CamerasRouter,
+    children: [
+      { path: "/", name: "zone-page", component: ZonePage },
+      {
+        path: "/:cameraId/editing-areas",
+        name: "editing-areas",
+        component: EditingAreas,
+      },
+      { path: "/:cameraId/visit-map", name: "visit-map", component: VisitMap },
+    ],
   },
 ];
 

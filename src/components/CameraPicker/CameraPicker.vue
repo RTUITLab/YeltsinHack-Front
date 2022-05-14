@@ -66,7 +66,7 @@
       </div>
     </div>
     <div :class="$style.buttonContainer">
-      <v-btn @click="onSave">Сохранить</v-btn>
+      <v-btn @click="onSave" elevation="0">Сохранить</v-btn>
     </div>
   </div>
 </template>

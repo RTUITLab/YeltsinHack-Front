@@ -1,32 +1,27 @@
 <template>
-<div>
-  <v-footer
-    color="primary"
-    padless
-  >
-    <v-row
-    justify="center"
-    no-gutters
-    >
-    <v-col cols="4"
-    v-for="link in links"
-    :key="link">
-      <v-btn
-      :to="link.link"
-      block
-      exact-path
-      color="white"
-      class="text-capitalize"
-      text
-      height="34"
+  <div style="position: fixed; bottom: 0px; width: 100%">
+    <v-footer color="primary" padless>
+      <v-row
+        justify="center"
+        no-gutters
+        style="background: linear-gradient(to right, #0027b2, #be00c7)"
       >
-        {{ link.text }}
-      </v-btn>
-    </v-col>
-      
-    </v-row>
-  </v-footer>  
-</div>
+        <v-col cols="4" v-for="link in links" :key="link">
+          <v-btn
+            :to="link.link"
+            block
+            exact-path
+            color="white"
+            class="text-capitalize"
+            text
+            height="34"
+          >
+            {{ link.text }}
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-footer>
+  </div>
 </template>
 
 <script lang="ts">
@@ -36,14 +31,13 @@ export default Vue.extend({
   name: "Footer",
 
   components: {},
-  methods: {
-  },
+  methods: {},
   data() {
     return {
       links: [
         {
           text: "Статистика",
-          link: { name: "statisticts" },
+          link: { name: "zone-page" },
         },
         {
           text: "Редактирование объектов",
@@ -52,9 +46,9 @@ export default Vue.extend({
         {
           text: "Карта размещений",
           link: { name: "visit-map" },
-        }
+        },
       ],
-    }
-  }
+    };
+  },
 });
 </script>

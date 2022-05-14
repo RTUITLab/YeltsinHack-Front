@@ -1,15 +1,11 @@
-<template>
-</template>
+<template></template>
 
 <script lang="ts">
 import Vue from "vue";
 
 export default Vue.extend({
   name: "Home",
-  components: {
-  },
-  methods: {
-
-  },
+  components: {},
+  methods: {},
 });
 </script>
