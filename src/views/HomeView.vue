@@ -11,6 +11,7 @@ export default Vue.extend({
 
   components: {
     HelloWorld,
+    CameraPicker,
   },
 });
 </script>
