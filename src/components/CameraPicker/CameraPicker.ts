@@ -1,5 +1,5 @@
 import { Component, Vue } from "vue-property-decorator";
-import saveArea from "@/services/pointsManager";
+import saveArea, { getAreas, getCamera } from "@/services/pointsManager";
 
 /**
  *    Attention!
@@ -14,6 +14,7 @@ export default class CameraPicker extends Vue {
   validatedArea = [false];
   currentArea = 0;
   img = "http://158.58.130.148/mjpg/video.mjpg";
+  cameraUuid = "df23eb7d-de12-4d75-b547-2310015c29cb";
 
   constructor() {
     super();
@@ -30,6 +31,27 @@ export default class CameraPicker extends Vue {
     //       "http://localhost:6969/oneshotimage1?" + Math.random() * 999999999;
     //   }, 800);
     // }
+
+    this.validatedArea = [];
+    this.areas = [];
+    this.currentArea = -1;
+    this.allPoints = [];
+    getCamera(this.cameraUuid).then(
+      ((e: any) => {
+        for (const i of e[0].areas) {
+          this.areas.push(
+            i.points.map((y: any) => {
+              return `${y.x},${y.y}`;
+            })
+          );
+          this.validatedArea.push(true);
+          this.areasNames.push(i.name);
+        }
+        this.areas.push([]);
+        this.currentArea = this.areas.length;
+        this.allPoints = [];
+      }).bind(this)
+    );
   }
 
   getCoords(index: number) {
@@ -49,15 +71,14 @@ export default class CameraPicker extends Vue {
     const svgParentCoordinates = (<HTMLDivElement>(
       this.$refs.svgParent
     )).getBoundingClientRect();
-    //
 
-    let obj = {
+    const obj = {
       maxX,
       maxY,
       minX,
       minY,
       dX: (maxX - minX) / 2 + minX,
-      dY: (maxY - minY) / 2 + minY
+      dY: (maxY - minY) / 2 + minY,
     };
     return obj;
   }
@@ -68,13 +89,15 @@ export default class CameraPicker extends Vue {
   }
 
   onClick(e: MouseEvent) {
+    if (this.currentArea === -1) this.currentArea = this.areas.length - 18;
+
     const svgParentCoordinates = (<HTMLDivElement>(
       this.$refs.svgParent
     )).getBoundingClientRect();
 
     const point = {
       x: e.x - svgParentCoordinates.x,
-      y: e.y - svgParentCoordinates.y
+      y: e.y - svgParentCoordinates.y,
     };
 
     const findPoint = this.areas[this.currentArea].find((e: any) => {
@@ -114,14 +137,17 @@ export default class CameraPicker extends Vue {
     this.currentArea = index;
   }
 
-  onSave(index: number) {
-    let obj: any = {
-      name: this.areasNames[index],
-      points: this.areas[index].map((e: any) => {
-        const object = e.split(",");
-        return { x: object[0], y: object[1] };
-      }),
-    };
-    saveArea(obj);
+  onSave() {
+    for (const i in this.areas) {
+      const obj: any = {
+        name: this.areasNames[i],
+        camera_uuid: this.cameraUuid,
+        points: this.areas[i].map((e: any) => {
+          const object = e.split(",");
+          return { x: object[0], y: object[1] };
+        }),
+      };
+      saveArea(obj);
+    }
   }
 }

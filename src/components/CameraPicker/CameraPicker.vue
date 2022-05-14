@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.parent">
-    <button @click="onSave(0)">Save</button>
+    <button @click="onSave">Save</button>
     <div :class="$style.videoContainer">
       <div :class="$style.svgParent" @click="onClick">
         <svg>
@@ -21,7 +21,7 @@
             :y="getCoords(index).dY"
             fill="rgb(0,255,0)"
           >
-            {{areasNames[index]}}
+            {{ areasNames[index] }}
           </text>
           <circle
             v-for="(point, index) of allPoints"
@@ -42,9 +42,28 @@
     <div :class="$style.listParent">
       <div :class="$style.list">
         <h2>Список</h2>
-        <div v-for="obj of areasNames">
-          {{ obj }}
-        </div>
+        <table>
+          <tbody>
+            <tr v-for="(obj, index) of areasNames" align="center">
+              <td>
+                {{ index + 1 }}
+              </td>
+              <td>
+                <v-text-field
+                  v-model="areasNames[index]"
+                  :value="obj"
+                  hide-details="auto"
+                ></v-text-field>
+              </td>
+            </tr>
+          </tbody>
+          <thead>
+            <tr>
+              <th>№</th>
+              <th>Name</th>
+            </tr>
+          </thead>
+        </table>
       </div>
     </div>
   </div>
