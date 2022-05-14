@@ -8,10 +8,11 @@ import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class CameraPicker extends Vue {
   areas: any = [[]];
+  areasNames: any = [];
   allPoints: any = [];
   validatedArea = [false];
   currentArea = 0;
-  img = "http://localhost:6969/oneshotimage1?1";
+  img = "http://158.58.130.148/mjpg/video.mjpg";
 
   constructor() {
     super();
@@ -20,11 +21,44 @@ export default class CameraPicker extends Vue {
       return false;
     };
 
-    setInterval(() => {
-      const img = <HTMLImageElement>this.$refs.svgParent;
-      img.src =
-        "http://localhost:6969/oneshotimage1?" + Math.random() * 999999999;
-    }, 800);
+    const img = <HTMLImageElement>this.$refs.svgParent;
+
+    // img.onload=()=>{
+    //   setInterval(() => {
+    //     img.src =
+    //       "http://localhost:6969/oneshotimage1?" + Math.random() * 999999999;
+    //   }, 800);
+    // }
+  }
+
+  getCoords(index: number) {
+    let maxX = 0;
+    let minX = 9999999;
+    let maxY = 0;
+    let minY = 9999999;
+    this.areas[index].forEach((e: any) => {
+      const obj = e.split(",");
+
+      if (Number.parseInt(obj[0]) > maxX) maxX = Number.parseInt(obj[0]);
+      if (Number.parseInt(obj[0]) < minX) minX = Number.parseInt(obj[0]);
+      if (Number.parseInt(obj[1]) > maxY) maxY = Number.parseInt(obj[1]);
+      if (Number.parseInt(obj[1]) < minY) minY = Number.parseInt(obj[1]);
+    });
+
+    const svgParentCoordinates = (<HTMLDivElement>(
+      this.$refs.svgParent
+    )).getBoundingClientRect();
+    //
+
+    let obj = {
+      maxX,
+      maxY,
+      minX,
+      minY,
+      dX: (maxX - minX) / 2 + minX,
+      dY: (maxY - minY) / 2 + minY,
+    };
+    return obj;
   }
 
   addPoint(x: number, y: number) {
@@ -58,6 +92,7 @@ export default class CameraPicker extends Vue {
       this.validatedArea[this.currentArea] = true;
       this.currentArea = this.areas.length - 1;
       this.allPoints = [];
+      this.areasNames.push("Hello world");
     } else {
       this.addPoint(point.x, point.y);
       this.validatedArea[this.currentArea] = false;

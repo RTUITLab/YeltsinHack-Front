@@ -5,17 +5,26 @@
         <svg>
           <polyline
             v-for="(obj, index) of areas"
-            v-bind:key="Math.random()*999"
-            :fill="validatedArea[index] ? 'rgba(0,255,0,0.3)' : 'transparent'"
+            v-bind:key="Math.random() * 999"
+            :fill="validatedArea[index] ? 'rgba(0,220,0,0.3)' : 'transparent'"
             :index="index"
             :points="obj.join(' ')"
-            :stroke="validatedArea[index] ? 'rgb(0,255,0)' : 'rgb(255,0,0)'"
+            :stroke="validatedArea[index] ? 'rgb(0,220,0)' : 'rgb(255,0,0)'"
             stroke-width="2"
             @click="onAreaClick"
           />
+          <text
+            v-for="(obj, index) of areas"
+            v-if="areas[index].length > 0"
+            :x="getCoords(index).dX"
+            :y="getCoords(index).dY"
+            fill="rgb(0,255,0)"
+          >
+            Hello World!
+          </text>
           <circle
             v-for="(point, index) of allPoints"
-            v-bind:key="Math.random()*999"
+            v-bind:key="Math.random() * 999"
             :cx="point.split(',')[0]"
             :cy="point.split(',')[1]"
             :index="index"
@@ -28,6 +37,14 @@
         </svg>
       </div>
       <img ref="svgParent" :class="$style.videoContent" :src="img" />
+    </div>
+    <div :class="$style.listParent">
+      <div :class="$style.list">
+        <h2>Список</h2>
+        <div v-for="obj of areasNames">
+          {{ obj }}
+        </div>
+      </div>
     </div>
   </div>
 </template>

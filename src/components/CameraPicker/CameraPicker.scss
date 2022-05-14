@@ -24,4 +24,13 @@
       height: fit-content;
     }
   }
+
+  .listParent{
+    max-width: 700px;
+    margin: 0 auto;
+    .list {
+      width: 100%;
+      text-align: left;
+    }
+  }
 }
