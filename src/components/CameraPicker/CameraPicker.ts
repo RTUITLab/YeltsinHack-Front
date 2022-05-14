@@ -1,4 +1,5 @@
 import { Component, Vue } from "vue-property-decorator";
+import saveArea from "@/services/pointsManager";
 
 /**
  *    Attention!
@@ -56,7 +57,7 @@ export default class CameraPicker extends Vue {
       minX,
       minY,
       dX: (maxX - minX) / 2 + minX,
-      dY: (maxY - minY) / 2 + minY,
+      dY: (maxY - minY) / 2 + minY
     };
     return obj;
   }
@@ -73,7 +74,7 @@ export default class CameraPicker extends Vue {
 
     const point = {
       x: e.x - svgParentCoordinates.x,
-      y: e.y - svgParentCoordinates.y,
+      y: e.y - svgParentCoordinates.y
     };
 
     const findPoint = this.areas[this.currentArea].find((e: any) => {
@@ -111,5 +112,16 @@ export default class CameraPicker extends Vue {
     e.stopPropagation();
     this.allPoints = this.areas[index];
     this.currentArea = index;
+  }
+
+  onSave(index: number) {
+    let obj: any = {
+      name: this.areasNames[index],
+      points: this.areas[index].map((e: any) => {
+        const object = e.split(",");
+        return { x: object[0], y: object[1] };
+      }),
+    };
+    saveArea(obj);
   }
 }

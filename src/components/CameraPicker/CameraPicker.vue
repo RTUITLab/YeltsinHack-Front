@@ -1,5 +1,6 @@
 <template>
   <div :class="$style.parent">
+    <button @click="onSave(0)">Save</button>
     <div :class="$style.videoContainer">
       <div :class="$style.svgParent" @click="onClick">
         <svg>
@@ -20,7 +21,7 @@
             :y="getCoords(index).dY"
             fill="rgb(0,255,0)"
           >
-            Hello World!
+            {{areasNames[index]}}
           </text>
           <circle
             v-for="(point, index) of allPoints"
