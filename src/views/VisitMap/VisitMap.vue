@@ -6,17 +6,33 @@
           <div style="color: rgba(0, 0, 0, 1)">Карта посещений</div>
         </v-col>
       </v-row>
-      <v-row
+      <div
         style="
-          align-items: flex-start;
+          display: flex;
+          max-width: 900px;
           margin: 0 auto;
-          width: fit-content;
-          margin-top: 50px;
+          justify-content: center;
+          justify-content: space-between;
         "
       >
-        <img src="/img/1.svg" alt="" style="height: 450px" />
-        <img src="/img/2.svg" alt="" style="height: 450px" />
-      </v-row>
+        <img
+          src="/img/menu.svg"
+          alt=""
+          style="width: 200px; margin-top: -250px"
+        />
+
+        <div
+          style="
+            align-items: flex-start;
+            flex-direction: column;
+            width: fit-content;
+            margin-top: 50px;
+          "
+        >
+          <div><img src="/img/1.svg" alt="" style="width: 500px" /></div>
+          <div><img src="/img/2.svg" alt="" style="width: 500px" /></div>
+        </div>
+      </div>
     </v-container>
   </div>
 </template>
