@@ -17,10 +17,10 @@
                     class="py-1"
                     align="center"
                     justify="center"
-                    v-for="(elem, el) in carouselItems"
+                    v-for="(camera, el) in carouselItems"
                     :key="el"
                   >
-                    <v-sheet @click="goToCamera('123')" tile>
+                    <v-sheet @click="goToCamera(camera.uuid)" tile>
                       <v-img src="../../assets/camera.png">
                         <div
                           class="white--text text-h5"
@@ -31,7 +31,7 @@
                             width: 100%;
                           "
                         >
-                          Camera {{ el }}
+                          {{ camera.name }}
                         </div>
                       </v-img>
                     </v-sheet>
@@ -49,7 +49,7 @@
           <div>
             <v-data-table
               :headers="headers"
-              :items="areas"
+              :items="allAreas[0]"
               item-key="name"
               class="elevation-1"
             >
@@ -63,10 +63,10 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { mapGetters } from "vuex";
 
 export default Vue.extend({
   name: "Statistics",
-
   components: {},
   methods: {
     goToCamera(id: string) {
@@ -74,14 +74,35 @@ export default Vue.extend({
       this.$router.push({ name: "zone-page", params: { cameraId: cameraId } });
     },
   },
+  created (){
+    // this.$store.dispatch("getAreas").then(() => {
+    //   this.allAreas = this.GET_AREAS
+    // });
+    let i = 0
+    this.$store.dispatch("getCameras").then(() => {
+      this.allCameras = this.GET_CAMERAS
+      this.allAreas = this.GET_CAMERAS.map((camera: any) => {
+        
+        return camera.areas.map((item: any) => {
+          i++
+          return {...item,...{cam: camera.name, num: i}}
+        })
+      })
+      
+      console.log(this.allAreas)
+      // this.showAreas = true
+    });
+  },
   data() {
     return {
+      allAreas: [],
+      allCameras: [],
       headers: [
         {
           text: "№",
           align: "start",
           sortable: false,
-          value: "number",
+          value: "num",
         },
         {
           text: "Название",
@@ -99,7 +120,7 @@ export default Vue.extend({
           text: "Ссылка",
           align: "start",
           sortable: false,
-          value: "link",
+          value: "uuid",
         },
       ],
       areas: [
@@ -155,13 +176,14 @@ export default Vue.extend({
     };
   },
   computed: {
+    ...mapGetters(["GET_AREAS", "GET_CAMERAS"]),
     carouselLength() {
-      const length = Math.ceil(this.items.length / 6);
+      const length = Math.ceil(this.allCameras.length / 6);
       return length;
     },
     carouselItems() {
       const num = this.carousel;
-      const items = this.items as string[];
+      const items = this.allCameras as string[];
       const arr = items.slice(num * 6, num * 6 + 6);
       return arr;
     },
