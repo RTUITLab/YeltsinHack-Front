@@ -34,6 +34,7 @@
 import Vue from "vue";
 import ApexCharts from "apexcharts";
 import heatmap from "vue-heatmapjs";
+import getCameras from "@/services/getCameras";
 Vue.use(heatmap, { heatmapPreload: [{ x: 10, y: 10, value: 100 }] });
 
 export default Vue.extend({
@@ -59,7 +60,61 @@ export default Vue.extend({
       },
     ] as any;
   },
-  mounted() {
+  methods: {
+    getTime(time: string) {
+      let date = new Date(time);
+      date.setMinutes(0);
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      return Math.ceil(date.getTime() / 1000);
+    },
+  },
+  async mounted() {
+    let cam = await getCameras(<any>this.$route.params.cameraId);
+    let categories = [];
+    let series = [];
+    let lastDate = undefined;
+    let lastCount = 0;
+    let countObj=0
+    let sum:any = []
+    let objects:any={}
+    for( let i of cam[0].areas){
+      let obj=i.stats
+      for(let j in obj){
+        obj[j].pName=i.name
+      }
+      sum=sum.concat(obj)
+    }
+    sum = sum.sort((i:any,j:any) => {
+      if(i.time<j.time)return 1
+      else return -1
+    })
+    for (let i of sum) {
+      let date = this.getTime(i.time);
+      let date2 =
+        new Date(date * 1000).toLocaleDateString("ru") +
+        ", " +
+        new Date(date * 1000).toLocaleTimeString("ru");
+      if (categories.indexOf(date2) === -1) categories.push(date2);
+      if (lastDate === date2) {
+        if(Object.keys(objects).indexOf(i.pName)!==-1){
+          objects[i.pName]={count:objects[i.pName].count+i.count,sum:objects[i.pName].sum+1}
+        }else{
+          objects[i.pName]={count:i.count,sum:1}
+
+        }
+        lastCount+=i.count
+        countObj++
+      }
+      else {
+        lastCount=Math.ceil(lastCount/countObj)
+        series.push(lastCount);
+        lastCount = 0;
+        countObj=0
+        lastDate = date2;
+      }
+    }
+
     var options = {
       chart: {
         height: 280,
@@ -71,7 +126,7 @@ export default Vue.extend({
       series: [
         {
           name: "Series 1",
-          data: [45, 52, 38, 45, 19, 23, 2],
+          data: series,
         },
       ],
       fill: {
@@ -84,15 +139,7 @@ export default Vue.extend({
         },
       },
       xaxis: {
-        categories: [
-          "01 Jan",
-          "02 Jan",
-          "03 Jan",
-          "04 Jan",
-          "05 Jan",
-          "06 Jan",
-          "07 Jan",
-        ],
+        categories: categories,
       },
     };
 
@@ -100,12 +147,18 @@ export default Vue.extend({
 
     chart.render();
 
+    let ser=[]
+    console.log(objects)
+    for(let k of Object.keys(objects)){
+      ser.push(Math.ceil(objects[k].count/objects[k].sum))
+    }
+
     let options2 = {
       chart: {
         type: "donut",
       },
-      series: [30, 40, 35, 50, 49, 60, 70, 91, 125],
-      labels: ["Apple", "Mango", "Orange", "Watermelon"],
+      series: ser,
+      labels: Object.keys(objects),
     };
 
     var chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
