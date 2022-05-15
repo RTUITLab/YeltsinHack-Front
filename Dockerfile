@@ -1,16 +1,12 @@
-FROM node:lts-alpine
-
-RUN npm install -g http-server
-
+FROM node:lts-alpine as build-stage
+ARG VUE_APP_API_HOST
 WORKDIR /app
-
-COPY . ./
-
+COPY package*.json ./
 RUN npm install
-
 COPY . .
-
 RUN npm run build
 
-EXPOSE 3000
-CMD [ "http-server", "dist" ]
+
+FROM nginx:latest as production-stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+EXPOSE 80
