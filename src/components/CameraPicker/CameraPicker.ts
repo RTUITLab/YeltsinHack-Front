@@ -19,7 +19,7 @@ export default class CameraPicker extends Vue {
   currentArea = 0;
   ids: any = [];
   img = "http://localhost:6969/oneshotimage1";
-  cameraUuid = "6c317b0f-ed20-4fcc-aadf-629892e84f2b";
+  cameraUuid = this.$route.params.cameraId;
 
   public mounted() {
     const imgContainer = <HTMLImageElement>this.$refs.svgParent;
