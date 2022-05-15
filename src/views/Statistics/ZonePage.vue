@@ -103,17 +103,29 @@ export default Vue.extend({
           objects[i.pName]={count:i.count,sum:1}
 
         }
-        lastCount+=i.count
+        lastCount+=Number.parseInt(i.count)
         countObj++
       }
       else {
         lastCount=Math.ceil(lastCount/countObj)
+        if(isNaN(lastCount))
+          lastCount=1
         series.push(lastCount);
         lastCount = 0;
         countObj=0
         lastDate = date2;
       }
     }
+    lastCount=Math.ceil(lastCount/countObj)
+    categories.push("")
+    if(isNaN(lastCount))
+      lastCount=1
+    series.push(lastCount);
+    lastCount = 0;
+    countObj=0
+
+    series.reverse()
+    categories.reverse()
 
     var options = {
       chart: {
@@ -125,7 +137,7 @@ export default Vue.extend({
       },
       series: [
         {
-          name: "Series 1",
+          name: "Просмотры",
           data: series,
         },
       ],

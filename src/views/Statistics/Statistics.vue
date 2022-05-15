@@ -53,6 +53,9 @@
               item-key="name"
               class="elevation-1"
             >
+              <template #item.link="{ item }">
+                <a :href="`/${item.link}`"> Перейти </a>
+              </template>
             </v-data-table>
           </div>
         </div>
@@ -74,22 +77,25 @@ export default Vue.extend({
       this.$router.push({ name: "zone-page", params: { cameraId: cameraId } });
     },
   },
-  created (){
+  created() {
     // this.$store.dispatch("getAreas").then(() => {
     //   this.allAreas = this.GET_AREAS
     // });
-    let i = 0
+    let i = 0;
     this.$store.dispatch("getCameras").then(() => {
-      this.allCameras = this.GET_CAMERAS
+      this.allCameras = this.GET_CAMERAS;
       this.allAreas = this.GET_CAMERAS.map((camera: any) => {
-        
         return camera.areas.map((item: any) => {
-          i++
-          return {...item,...{cam: camera.name, num: i}}
-        })
-      })
-      
-      console.log(this.allAreas)
+          i++;
+
+          return {
+            ...item,
+            ...{ cam: camera.name, num: i, link: camera.uuid },
+          };
+        });
+      });
+
+      console.log(this.allAreas);
       // this.showAreas = true
     });
   },
@@ -120,7 +126,7 @@ export default Vue.extend({
           text: "Ссылка",
           align: "start",
           sortable: false,
-          value: "uuid",
+          value: "link",
         },
       ],
       areas: [
